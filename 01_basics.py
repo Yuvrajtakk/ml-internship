@@ -106,40 +106,127 @@
 #         print(f"Epoch {epoch + 1} | w: {w:.2f}, b: {b:.2f} | Final Error: {error:.2f}")
 
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-inputs = [1, 2, 3, 4]
-targets = [5, 7, 9, 11]
+# inputs = [1, 2, 3, 4]
+# targets = [5, 7, 9, 11]
 
-# The final parameters our machine learned
-w = 2.0
-b = 3.0
+# # The final parameters our machine learned
+# w = 2.0
+# b = 3.0
 
-# 1. List Comprehension: A fast, Pythonic way to run a loop inside a list
-# This calculates the predicted y value for every x in our inputs
-predictions = [(x * w) + b for x in inputs]
+# # 1. List Comprehension: A fast, Pythonic way to run a loop inside a list
+# # This calculates the predicted y value for every x in our inputs
+# predictions = [(x * w) + b for x in inputs]
 
-# 2. Scatter plot: Draws our original dataset as individual dots
-plt.scatter(inputs, targets, color='blue', label='Actual Data')
+# # 2. Scatter plot: Draws our original dataset as individual dots
+# plt.scatter(inputs, targets, color='blue', label='Actual Data')
 
-# 3. Line plot: Draws our machine's learned rule as a continuous line
-plt.plot(inputs, predictions, color='red', label='Learned Rule')
+# # 3. Line plot: Draws our machine's learned rule as a continuous line
+# plt.plot(inputs, predictions, color='red', label='Learned Rule')
 
-# 4. Make the graph readable
-plt.xlabel('Inputs (x)')
-plt.ylabel('Targets (y)')
-plt.title('Machine Learning: Fitting a Line to Data')
-plt.legend()
+# # 4. Make the graph readable
+# plt.xlabel('Inputs (x)')
+# plt.ylabel('Targets (y)')
+# plt.title('Machine Learning: Fitting a Line to Data')
+# plt.legend()
 
-# 5. Render the window on your screen
-plt.show()
+# # 5. Render the window on your screen
+# plt.show()
+
+# import numpy as np
+# import matplotlib.pyplot as plt
+
+# # 1. Define our squashing function
+# def sigmoid(z):
+#     # np.exp(-z) is numpy's way of calculating e^(-z)
+#     return 1 / (1 + np.exp(-z))
+
+# # 2. Create some dummy data representing the output of a linear equation
+# # np.linspace creates an array of exactly 100 evenly spaced numbers between -10 and 10
+# linear_outputs = np.linspace(-10, 10, 100)
+
+# # 3. Pass our linear outputs through the sigmoid function
+# probabilities = sigmoid(linear_outputs)
+
+# # 4. Visualize the result
+# plt.plot(linear_outputs, probabilities, color='purple', linewidth=3)
+# plt.axhline(0.5, color='gray', linestyle='--') # Draws a dashed line at 0.5
+# plt.title('The Sigmoid Function')
+# plt.xlabel('Linear Output (z = wx + b)')
+# plt.ylabel('Probability (squashed between 0 and 1)')
+# plt.grid(True)
+# plt.show()
+
+# import numpy as np
+# from sklearn.linear_model import LogisticRegression
+
+# inputs = np.array([[1], [2], [3], [4], [5], [6]])
+# targets = np.array([0, 0, 0, 1, 1, 1])
+
+# model = LogisticRegression()
+
+# model.fit(inputs, targets)
+
+# new_data = np.array([[3.5]])
+# prediction = model.predict(new_data)
+# probability = model.predict_proba(new_data)
+
+# print(f"Prediction: {prediction[0]}")
+# print(f"Probabilities: Class 0 = {probability[0][0]:.2f}, Class 1 = {probability[0][1]:.2f}")
+
+# import numpy as np
+# from sklearn.linear_model import LogisticRegression
+# from sklearn.metrics import confusion_matrix, precision_score, recall_score
+
+# # 1. Dummy data: 10 engines. (0 = Healthy, 1 = Failing)
+# # Let's say feature is "Engine Temperature"
+# temperatures = np.array([[200], [210], [220], [230], [240], [250], [260], [270], [280], [290]])
+# actual_status = np.array([0, 0, 0, 0, 0, 0, 1, 1, 1, 1])
+
+# # 2. Train the model
+# model = LogisticRegression()
+# model.fit(temperatures, actual_status)
+
+# # 3. Get the raw probabilities instead of the default 0.5 predictions
+# probabilities = model.predict_proba(temperatures)
+
+# # 4. Extract just the probability of class 1 (Failing)
+# # probabilities is a 2D array: [prob_class_0, prob_class_1]. We want the second column.
+# prob_failing = probabilities[:, 1] 
+
+# # 5. Apply a CUSTOM "paranoid" threshold of 0.3
+# custom_predictions = (prob_failing >= 0.3).astype(int)
+
+# # 6. Calculate our metrics
+# matrix = confusion_matrix(actual_status, custom_predictions)
+# recall = recall_score(actual_status, custom_predictions)
+# precision = precision_score(actual_status, custom_predictions)
+
+# print("Confusion Matrix:\n", matrix)
+# print(f"Recall: {recall:.2f}")
+# print(f"Precision: {precision:.2f}")
 
 
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.datasets import load_iris
 
+# 1. Load a sample dataset (Iris)
+iris = load_iris()
+X, y = iris.data, iris.target
 
+# 2. Create the blueprint for the tree
+# We set max_depth to 3 to keep the tree small and readable
+clf = DecisionTreeClassifier(max_depth=3)
 
+# 3. Fit the model to the data
+clf.fit(X, y)
 
+# 4. Make a prediction for a new, unseen flower
+# Features: [sepal length, sepal width, petal length, petal width]
+new_flower = np.array([[5.1, 3.5, 1.4, 0.2]])
+prediction = clf.predict(new_flower)
 
-
-
+print(f"Prediction: {iris.target_names[prediction][0]}")
 

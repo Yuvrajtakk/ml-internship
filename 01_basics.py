@@ -231,73 +231,73 @@
 # print(f"Prediction: {iris.target_names[prediction][0]}")
 
 
-# import matplotlib.pyplot as plt
-# from sklearn.tree import DecisionTreeClassifier, plot_tree
-
-# # 1. Our tiny dataset (2D array for features, 1D for targets)
-# X = [[10], [20], [30], [40]]
-# y = [0, 0, 1, 1]
-
-# # 2. Instantiate the model
-# tree_model = DecisionTreeClassifier(criterion='gini', max_depth=2, random_state=42)
-
-# # 3. Train the model
-# tree_model.fit(X, y)
-
-# # 4. Predict a new unseen temperature (e.g., 18 degrees)
-# new_temp = [[18]]
-# prediction = tree_model.predict(new_temp)
-# print(f"Prediction for Temp 18: {prediction[0]}")
-
-# # 5. Visualize the math the tree just performed
-# plt.figure(figsize=(8, 6))
-# plot_tree(tree_model, feature_names=["Temperature"], class_names=["Healthy", "Failing"], filled=True)
-# plt.title("Decision Tree: Gini Impurity in Action")
-# plt.show()
-
-import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import plot_tree
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 
-X = np.array([
-    [200, 0.1, 10],
-    [210, 0.2, 11],
-    [220, 0.1, 10],
-    [280, 0.8, 15],
-    [290, 0.9, 14],
-    [300, 0.8, 16]
-])
-y = np.array([0, 0, 0, 1, 1, 1])
+# 1. Our tiny dataset (2D array for features, 1D for targets)
+X = [[10], [20], [30], [40]]
+y = [0, 0, 1, 1]
 
-rf_model = RandomForestClassifier(n_estimators=100, max_features='sqrt', random_state=42)
-rf_model.fit(X, y)
+# 2. Instantiate the model
+tree_model = DecisionTreeClassifier(criterion='gini', max_depth=2, random_state=42)
 
-new_engine = np.array([[250, 0.5, 12]])
-prediction = rf_model.predict(new_engine)
-probabilities = rf_model.predict_proba(new_engine)
+# 3. Train the model
+tree_model.fit(X, y)
 
-print(f"Prediction: {prediction[0]}")
-print(f"Voting Results: Healthy = {probabilities[0][0]*100}%, Failing = {probabilities[0][1]*100}%")
+# 4. Predict a new unseen temperature (e.g., 18 degrees)
+new_temp = [[18]]
+prediction = tree_model.predict(new_temp)
+print(f"Prediction for Temp 18: {prediction[0]}")
 
-# Visualize first 6 trees from the forest
-fig, axes = plt.subplots(2, 3, figsize=(20, 10))
-feature_names = ["Temperature", "Vibration", "Pressure"]
-class_names = ["Healthy", "Failing"]
-
-for i, ax in enumerate(axes.ravel()):
-    plot_tree(
-        rf_model.estimators_[i],
-        feature_names=feature_names,
-        class_names=class_names,
-        filled=True,
-        ax=ax
-    )
-    ax.set_title(f"Tree {i+1}", fontsize=12)
-
-plt.suptitle("6 Individual Trees Inside the Random Forest", fontsize=16)
-plt.tight_layout()
+# 5. Visualize the math the tree just performed
+plt.figure(figsize=(8, 6))
+plot_tree(tree_model, feature_names=["Temperature"], class_names=["Healthy", "Failing"], filled=True)
+plt.title("Decision Tree: Gini Impurity in Action")
 plt.show()
+
+# import numpy as np
+# import matplotlib.pyplot as plt
+# from sklearn.ensemble import RandomForestClassifier
+# from sklearn.tree import plot_tree
+
+# X = np.array([
+#     [200, 0.1, 10],
+#     [210, 0.2, 11],
+#     [220, 0.1, 10],
+#     [280, 0.8, 15],
+#     [290, 0.9, 14],
+#     [300, 0.8, 16]
+# ])
+# y = np.array([0, 0, 0, 1, 1, 1])
+
+# rf_model = RandomForestClassifier(n_estimators=100, max_features='sqrt', random_state=42)
+# rf_model.fit(X, y)
+
+# new_engine = np.array([[250, 0.5, 12]])
+# prediction = rf_model.predict(new_engine)
+# probabilities = rf_model.predict_proba(new_engine)
+
+# print(f"Prediction: {prediction[0]}")
+# print(f"Voting Results: Healthy = {probabilities[0][0]*100}%, Failing = {probabilities[0][1]*100}%")
+
+# # Visualize first 6 trees from the forest
+# fig, axes = plt.subplots(2, 3, figsize=(20, 10))
+# feature_names = ["Temperature", "Vibration", "Pressure"]
+# class_names = ["Healthy", "Failing"]
+
+# for i, ax in enumerate(axes.ravel()):
+#     plot_tree(
+#         rf_model.estimators_[i],
+#         feature_names=feature_names,
+#         class_names=class_names,
+#         filled=True,
+#         ax=ax
+#     )
+#     ax.set_title(f"Tree {i+1}", fontsize=12)
+
+# plt.suptitle("6 Individual Trees Inside the Random Forest", fontsize=16)
+# plt.tight_layout()
+# plt.show()
 
 
 

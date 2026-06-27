@@ -231,29 +231,29 @@
 # print(f"Prediction: {iris.target_names[prediction][0]}")
 
 
-import matplotlib.pyplot as plt
-from sklearn.tree import DecisionTreeClassifier, plot_tree
+# import matplotlib.pyplot as plt
+# from sklearn.tree import DecisionTreeClassifier, plot_tree
 
-# 1. Our tiny dataset (2D array for features, 1D for targets)
-X = [[10], [20], [30], [40]]
-y = [0, 0, 1, 1]
+# # 1. Our tiny dataset (2D array for features, 1D for targets)
+# X = [[10], [20], [30], [40]]
+# y = [0, 0, 1, 1]
 
-# 2. Instantiate the model
-tree_model = DecisionTreeClassifier(criterion='gini', max_depth=2, random_state=42)
+# # 2. Instantiate the model
+# tree_model = DecisionTreeClassifier(criterion='gini', max_depth=2, random_state=42)
 
-# 3. Train the model
-tree_model.fit(X, y)
+# # 3. Train the model
+# tree_model.fit(X, y)
 
-# 4. Predict a new unseen temperature (e.g., 18 degrees)
-new_temp = [[18]]
-prediction = tree_model.predict(new_temp)
-print(f"Prediction for Temp 18: {prediction[0]}")
+# # 4. Predict a new unseen temperature (e.g., 18 degrees)
+# new_temp = [[18]]
+# prediction = tree_model.predict(new_temp)
+# print(f"Prediction for Temp 18: {prediction[0]}")
 
-# 5. Visualize the math the tree just performed
-plt.figure(figsize=(8, 6))
-plot_tree(tree_model, feature_names=["Temperature"], class_names=["Healthy", "Failing"], filled=True)
-plt.title("Decision Tree: Gini Impurity in Action")
-plt.show()
+# # 5. Visualize the math the tree just performed
+# plt.figure(figsize=(8, 6))
+# plot_tree(tree_model, feature_names=["Temperature"], class_names=["Healthy", "Failing"], filled=True)
+# plt.title("Decision Tree: Gini Impurity in Action")
+# plt.show()
 
 # import numpy as np
 # import matplotlib.pyplot as plt
@@ -299,7 +299,260 @@ plt.show()
 # plt.tight_layout()
 # plt.show()
 
+# import numpy as np
+# import matplotlib.pyplot as plt
+# from sklearn.ensemble import RandomForestClassifier
 
+# # 1. Synthetic 2D dataset: [Speed, Vibration]
+# X = np.array([
+#     [40, 0.2], [45, 0.1], [50, 0.3], [55, 0.2], # Healthy trucks (0)
+#     [85, 0.8], [90, 0.9], [95, 0.7], [100, 0.8], # Failing trucks (1)
+#     [70, 0.4], [75, 0.6]                          # Overlapping / Tricky zone
+# ])
+# y = np.array([0, 0, 0, 0, 1, 1, 1, 1, 0, 1])
+
+# # 2. Initialize the Random Forest with OOB scoring enabled
+# forest = RandomForestClassifier(n_estimators=50, oob_score=True, random_state=42)
+
+# # 3. Train the model
+# forest.fit(X, y)
+
+# # 4. Create a dense grid grid to paint the decision boundary background
+# x_min, x_max = X[:, 0].min() - 10, X[:, 0].max() + 10
+# y_min, y_max = X[:, 1].min() - 0.2, X[:, 1].max() + 0.2
+
+# # Generate coordinates for every intersection on our grid mesh
+# xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.5),np.arange(y_min, y_max, 0.02))
+
+# # 5. Predict the class for every single point on the background grid
+# # np.c_ flattens the grids and pairs them up as [x, y] coordinates
+# grid_points = np.c_[xx.ravel(), yy.ravel()]
+# Z = forest.predict(grid_points)
+# Z = Z.reshape(xx.shape) # Shape it back into a 2D grid image
+
+# # 6. Plot the boundary background and coordinates
+# plt.contourf(xx, yy, Z, alpha=0.3, cmap='bwr') # background color fill
+# plt.scatter(X[y==0, 0], X[y==0, 1], color='blue', label='Healthy (0)')
+# plt.scatter(X[y==1, 0], X[y==1, 1], color='red', label='Failing (1)')
+
+# plt.title(f"Random Forest Decision Boundary | OOB Accuracy: {forest.oob_score_:.2%}")
+# plt.xlabel('Truck Speed')
+# plt.ylabel('Vibration Level')
+# plt.legend()
+# plt.show()
+
+
+# #python:Decision Tree Space Splitter:decision_tree_walkthrough.py
+# import numpy as np  # We import NumPy to handle arrays and fast grid mathematical computations.
+# import matplotlib.pyplot as plt  # We import Matplotlib's pyplot interface to draw coordinates and fill backgrounds.
+# from sklearn.tree import DecisionTreeClassifier, plot_tree  # We import the classifier model and its built-in visualization.
+
+# # 1. Prepare our training dataset (X is 2D features, y is 1D binary labels).
+# # Feature columns: [Temperature (Celsius), Vibration Level (G-force)].
+# X = np.array([
+#     [12.0, 0.15],  # Engine 1: Temp=12, Vib=0.15 -> Class 0 (Healthy)
+#     [18.0, 0.22],  # Engine 2: Temp=18, Vib=0.22 -> Class 0 (Healthy)
+#     [22.0, 0.65],  # Engine 3: Temp=22, Vib=0.65 -> Class 1 (Failing)
+#     [32.0, 0.78],  # Engine 4: Temp=32, Vib=0.78 -> Class 1 (Failing)
+#     [35.0, 0.35]   # Engine 5: Temp=35, Vib=0.35 -> Class 0 (Healthy)
+# ])
+# y = np.array([0, 0, 1, 1, 0])  # status targets: 0 represents Healthy, 1 represents Failing.
+
+# # 2. Instantiate the Decision Tree model.
+# # max_depth=2 stops tree expansion after 2 layers to prevent overfitting on this small set.
+# # criterion='gini' specifies that we use the Gini Impurity metric we calculated manually.
+# tree_model = DecisionTreeClassifier(criterion='gini', max_depth=2, random_state=42)
+
+# # 3. Fit the model to the input features X and target classes y.
+# # During fit, the tree recursively sweeps through features and thresholds to find the highest Gini reduction.
+# tree_model.fit(X, y)
+
+# # 4. Create a Matplotlib figure containing two subplots (1 row, 2 columns).
+# # figsize=(14, 6) sets the physical width of the popped window to 14 inches and height to 6 inches.
+# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+
+# # --- FIRST SUBPLOT: Drawing the decision boundary space map ---
+# # We find the min and max limits of our features, and pad them to make space for the boundaries.
+# x_min, x_max = X[:, 0].min() - 5, X[:, 0].max() + 5  # Limits for temperature axis.
+# y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1  # Limits for vibration axis.
+
+# # np.meshgrid creates a dense grid of coordinates representing every pixel in the graph coordinate system.
+# # np.arange(start, stop, step) generates values at small intervals to make the boundary background smooth.
+# xx, yy = np.meshgrid(
+#     np.arange(x_min, x_max, 0.1),  # Temperature values with a step of 0.1
+#     np.arange(y_min, y_max, 0.01)  # Vibration values with a step of 0.01
+# )
+
+# # We flatten the grids and pair up each (x, y) intersection to feed into the prediction engine.
+# # xx.ravel() flattens the 2D grid matrix into a 1D vector.
+# # np.c_ takes these flattened vectors and merges them side-by-side as coordinate pairs.
+# grid_pixels = np.c_[xx.ravel(), yy.ravel()]
+
+# # Predict the class (0 or 1) for every single coordinate pixel on the graph background.
+# pixel_predictions = tree_model.predict(grid_pixels)
+
+# # Reshape the output vector of predictions back into a 2D grid to match the structure of our coordinates.
+# pixel_predictions = pixel_predictions.reshape(xx.shape)
+
+# # ax1.contourf fills the background of the first subplot with color maps based on our predictions.
+# # alpha=0.3 makes the background semi-transparent; cmap='bwr' maps class 0 to blue and class 1 to red.
+# ax1.contourf(xx, yy, pixel_predictions, alpha=0.3, cmap='bwr')
+
+# # Scatter plot our original 5 points on top of the shaded decision boundaries.
+# # We plot the Healthy engines (y == 0) as blue markers and Failing engines (y == 1) as red markers.
+# ax1.scatter(X[y == 0, 0], X[y == 0, 1], color='blue', edgecolor='k', s=100, label='Healthy (0)')
+# ax1.scatter(X[y == 1, 0], X[y == 1, 1], color='red', edgecolor='k', s=100, label='Failing (1)')
+
+# # Configure labels, titles, and legends for the coordinate map.
+# ax1.set_xlabel('Temperature (°C)')  # Label for the horizontal x-axis.
+# ax1.set_ylabel('Vibration Level (G-force)')  # Label for the vertical y-axis.
+# ax1.set_title('Decision Tree: Carved Space Boundaries')  # Subplot title.
+# ax1.legend()  # Display our labeled dataset items.
+
+# # --- SECOND SUBPLOT: Plotting the logical flowchart tree ---
+# # plot_tree draws the flowchart representation of our nested rules.
+# # filled=True colors the flowchart blocks to represent which class is dominant.
+# plot_tree(
+#     tree_model,
+#     feature_names=["Temperature", "Vibration"],
+#     class_names=["Healthy", "Failing"],
+#     filled=True,
+#     ax=ax2
+# )
+# ax2.set_title('Decision Tree: Logical Decision Rules')  # Subplot title.
+
+# # Display the finalized multi-pane visualization on your screen.
+# plt.tight_layout()  # Adjusts subplot padding so labels do not overlap.
+# plt.show()  # Opens the interactive display window in VS Code.
+
+
+# #python:Random Forest Ensemble Mapping:random_forest_walkthrough.py
+# import numpy as np  # We import NumPy to handle fast coordinate vectors and matrix slicing operations.
+# import matplotlib.pyplot as plt  # We import Matplotlib's pyplot to render decision territory maps.
+# from sklearn.ensemble import RandomForestClassifier  # We import the Random Forest ensemble model from scikit-learn.
+
+# # 1. Generate synthetic 2D data: [Speed (km/h), Fuel Consumption Rate (L/100km)].
+# # This dataset contains some overlapping boundary points to show how the ensemble handles noisy regions.
+# X = np.array([
+#     [30, 5.5], [35, 6.2], [40, 5.8], [45, 6.0], [50, 7.2],  # Healthy delivery trucks (0)
+#     [85, 12.5], [90, 14.1], [95, 13.8], [100, 15.0], [75, 11.2],  # Damaged/Faulty delivery trucks (1)
+#     [60, 8.5], [65, 10.1], [70, 9.2], [72, 8.8]  # Ambiguous middle-ground trucks
+# ])
+# y = np.array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1])  # status targets: 0=Healthy, 1=Failing.
+
+# # 2. Instantiate our Random Forest model.
+# # n_estimators=100 specifies that we will build an ensemble of exactly 100 decision trees.
+# # oob_score=True forces the forest to calculate the out-of-bag validation accuracy using the 36.8% left-out data.
+# # max_features='sqrt' restricts each tree to split using a maximum of sqrt(total_features) variables.
+# forest_model = RandomForestClassifier(n_estimators=100, oob_score=True, max_features='sqrt', random_state=42)
+
+# # 3. Train the model using fit.
+# # This bootstrap-samples the rows and feature indices 100 times to construct our collection of trees.
+# forest_model.fit(X, y)
+
+# # 4. Generate coordinates to plot our decision boundaries.
+# x_min, x_max = X[:, 0].min() - 10, X[:, 0].max() + 10  # Horizontal boundary range for speed.
+# y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1  # Vertical boundary range for fuel rate.
+
+# # Generate the grid mesh intersections.
+# xx, yy = np.meshgrid(
+#     np.arange(x_min, x_max, 0.5),  # Step size of 0.5 for speed.
+#     np.arange(y_min, y_max, 0.05)  # Step size of 0.05 for fuel consumption.
+# )
+
+# # Flatten and stack coordinate lists.
+# grid_coordinates = np.c_[xx.ravel(), yy.ravel()]
+
+# # Predict class labels for every point on our grid background.
+# grid_predictions = forest_model.predict(grid_coordinates)
+
+# # Reshape prediction output matrix to match the spatial geometry of our grid.
+# grid_predictions = grid_predictions.reshape(xx.shape)
+
+# # Create our visualization canvas window.
+# plt.figure(figsize=(10, 7))
+
+# # Contour fill our map area with color bands.
+# # Class 0 regions are colored light blue; Class 1 regions are colored light red.
+# plt.contourf(xx, yy, grid_predictions, alpha=0.3, cmap='bwr')
+
+# # Draw our original truck points on top of the prediction map.
+# plt.scatter(X[y == 0, 0], X[y == 0, 1], color='blue', edgecolor='k', s=100, label='Healthy Truck (0)')
+# plt.scatter(X[y == 1, 0], X[y == 1, 1], color='red', edgecolor='k', s=100, label='Failing Truck (1)')
+
+# # Configure axes titles, labels, grids, and legends.
+# plt.xlabel('Truck Speed (km/h)')  # Label our horizontal coordinate axis.
+# plt.ylabel('Fuel Consumption Rate (L/100km)')  # Label our vertical coordinate axis.
+
+# # We pull our calculated out-of-bag validation metric score using the forest_model.oob_score_ attribute.
+# plt.title(f"Random Forest (100 Trees) | Out-Of-Bag Validation Accuracy: {forest_model.oob_score_:.2%}")
+# plt.legend()  # Display labels.
+# plt.grid(True, linestyle='--', alpha=0.5)  # Overlay a soft grid line system.
+
+# # Draw the window screen.
+# plt.show()
+
+
+
+#python:Support Vector Machine Margin Visualizer:svm_margin_walkthrough.py
+import numpy as np  # Used to construct coordinate vectors and matrix spacing arrays
+import matplotlib.pyplot as plt  # Used to render our decision space maps and dot plots
+from sklearn.svm import SVC  # Used to import the standard support vector binary classification machine
+
+# 1. Generate an array grid of 8 coordinate positions representing truck parameters [Speed, Vibrations]
+X = np.array([
+    [2, 3], [3, 2], [1, 1], [4, 1],  # Healthy delivery trucks (Class 0)
+    [6, 7], [7, 6], [8, 8], [5, 9]   # Failing delivery trucks (Class 1)
+])
+y = np.array([0, 0, 0, 0, 1, 1, 1, 1])  # Target classifications mapped to each truck vector
+
+# 2. Instantiate and fit a linear linear-kernel SVM machine
+# C=1.0 specifies our strictness penalty factor; kernel='linear' locks the algorithm to straight separating hyperplanes
+svm_model = SVC(kernel='linear', C=1.0)
+svm_model.fit(X, y)  # Executes convex quadratic programming loops to mathematically isolate support points
+
+# 3. Establish structural figure layout elements using matplotlib
+plt.figure(figsize=(10, 7))  # Creates a layout sheet sized 10 inches wide by 7 inches tall
+
+# 4. Generate coordinate mesh grids to construct our continuous color-filled boundary background
+x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1  # Border calculations tracking the Speed feature limits
+y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1  # Border calculations tracking the Vibration feature limits
+xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02), np.arange(y_min, y_max, 0.02))  # Build coordinate mesh sheets
+
+# 5. Calculate class predictions for every specific mesh intersection pixel on our visual background sheet
+Z = svm_model.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)  # Reshape vector sheets back into data matrices
+plt.contourf(xx, yy, Z, alpha=0.2, cmap='bwr')  # Render our divided filled regional background colors (Blue/Red)
+
+# 6. Isolate and draw the mathematical decision hyperplane line and its corresponding margin boundaries
+w = svm_model.coef_[0]  # Extract the isolated weight parameter vector [w0, w1] calculated by the optimizer
+slope = -w[0] / w[1]  # Derive standard geometric straight-line slope values from structural vector weights
+intercept = -svm_model.intercept_[0] / w[1]  # Scale coordinate intercept offsets relative to vertical dimension maps
+axis_range = np.linspace(x_min, x_max, 100)  # Continuous linear value space tracking our horizontal scale range
+hyperplane_line = slope * axis_range + intercept  # Calculate standard line point positions tracking the main hyperplane
+plt.plot(axis_range, hyperplane_line, 'k-', linewidth=2, label='Separating Hyperplane')  # Plot solid line center boundary
+
+# 7. Calculate and overlay parallel margin lanes derived from support vector coordinate spacing constraints
+margin_offset = 1 / w[1]  # Scale vertical line spacing gaps using extracted weight norm projections
+margin_above = hyperplane_line + margin_offset  # Shift baseline points vertically to mark upper class bounds
+margin_below = hyperplane_line - margin_offset  # Shift baseline points vertically to mark lower class bounds
+plt.plot(axis_range, margin_above, 'k--', linewidth=1.5, label='Margin Boundaries')  # Plot upper dashed pavement track
+plt.plot(axis_range, margin_below, 'k--', linewidth=1.5)  # Plot lower dashed pavement track
+
+# 8. Circle specific points saved in internal model state memory arrays identified as Support Vectors
+support_points = svm_model.support_vectors_  # Extract coordinate values saved inside internal model storage fields
+plt.scatter(support_points[:, 0], support_points[:, 1], s=250, facecolors='none', edgecolors='black', linewidths=2.5, label='Support Vectors')  # Ring vectors
+
+# 9. Scatter plot original point distributions grouped by target labels over the shaded territory spaces
+plt.scatter(X[y == 0, 0], X[y == 0, 1], color='blue', edgecolor='k', s=100, label='Healthy Truck (0)')
+plt.scatter(X[y == 1, 0], X[y == 1, 1], color='red', edgecolor='k', s=100, label='Failing Truck (1)')
+
+# 10. Finalize descriptive chart legend titles, labeled axes elements, and screen window layouts
+plt.title('Support Vector Machine: Maximum Margin Space Separation')  # Write structural map heading titles
+plt.xlabel('Truck Speed (Normalized Scale)')  # Label horizontal feature orientation vectors
+plt.ylabel('Vibration Energy (Normalized Scale)')  # Label vertical feature orientation vectors
+plt.legend(loc='upper left')  # Draw bounded identifying descriptive map keys
+plt.grid(True, linestyle=':', alpha=0.6)  # Layer lightweight structural coordinate alignment dots
+plt.show()  # Command standard operating kernels to project finalized map structures onto user screens
 
 
 

@@ -225,10 +225,14 @@ draw_svm_boundary(
 
 draw_svm_boundary(
     axes[2], svm_poly, X_poly_s, y_poly,
-    title=(f'POLYNOMIAL Kernel  |  C=1.0, degree=3\n'f'Accuracy: {acc_p:.1%}  |  Support Vectors: {sum(svm_poly.n_support_)}\n'f'Curved boundary separates crescent moon shapes\n'f'Neither linear nor circular would work here'),
+    title=(f'POLYNOMIAL Kernel  |  C=1.0, degree=3\n'
+           f'Accuracy: {acc_p:.1%}  |  Support Vectors: {sum(svm_poly.n_support_)}\n'
+           f'Curved boundary separates crescent moon shapes\n'
+           f'Neither linear nor circular would work here'),
     new_pt=new_p[0]
 )
 
-plt.suptitle('SVM — 3 Kernels: Same Maximum Margin Idea, Different Boundary Shapes',fontsize=14, fontweight='bold')
+plt.suptitle('SVM — 3 Kernels: Same Maximum Margin Idea, Different Boundary Shapes',
+             fontsize=14, fontweight='bold')
 plt.tight_layout()
 plt.show()

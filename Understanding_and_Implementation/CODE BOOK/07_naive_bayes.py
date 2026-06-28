@@ -254,8 +254,8 @@ print("=" * 65)
 
 
 # ── VISUALIZATION ─────────────────────────────────────────────
-fig, axes = plt.subplots(1, 3, figsize=(21, 7))
-plt.subplots_adjust(wspace=0.30)
+fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+plt.subplots_adjust(wspace=0.35, hspace=0.4)
 
 # LEFT: GaussianNB — 2D decision boundary showing bell-curve-based boundary
 x_min = X_gauss[:, 0].min() - 5;  x_max = X_gauss[:, 0].max() + 5
@@ -265,61 +265,57 @@ xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.5),
 Z_g = gnb.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
 axes[0].contourf(xx, yy, Z_g, alpha=0.25, cmap='bwr')
 axes[0].scatter(X_gauss[y_gauss==0, 0], X_gauss[y_gauss==0, 1],
-                color='blue', edgecolor='k', s=50, alpha=0.7, label='Healthy (0)')
+                color='blue', edgecolor='k', s=45, alpha=0.7, label='Healthy (0)')
 axes[0].scatter(X_gauss[y_gauss==1, 0], X_gauss[y_gauss==1, 1],
-                color='red',  edgecolor='k', s=50, alpha=0.7, label='Failing (1)')
+                color='red',  edgecolor='k', s=45, alpha=0.7, label='Failing (1)')
 axes[0].scatter(new_truck_g[0][0], new_truck_g[0][1], color='green',
-                marker='*', s=320, zorder=6,
+                marker='*', s=300, zorder=6,
                 label=f'New truck → {"Failing" if pred_g==1 else "Healthy"}')
-axes[0].set_xlabel('Speed (km/h)')
-axes[0].set_ylabel('Vibration (G-force)')
-axes[0].set_title(f'GaussianNB — Continuous Sensor Data\n'
-                  f'Accuracy: {g_acc:.1%}  |  100 trucks\n'
-                  f'Boundary formed where bell curves from each class intersect')
-axes[0].legend(fontsize=8)
+axes[0].set_xlabel('Speed (km/h)', fontsize=9)
+axes[0].set_ylabel('Vibration (G-force)', fontsize=9)
+axes[0].set_title(f'GaussianNB — Continuous Sensor Data\nAccuracy: {g_acc:.1%}  |  100 trucks\nBell curves intersect to form boundary', fontsize=9, fontweight='bold')
+axes[0].legend(fontsize=7.5, loc='upper left')
 axes[0].grid(True, alpha=0.2)
 
 # MIDDLE: MultinomialNB — word probability bar chart per class
 x_pos = np.arange(len(word_names))
 width = 0.35
 axes[1].bar(x_pos - width/2, word_probs[0], width,
-            label='P(word | Healthy)', color='steelblue', edgecolor='k', alpha=0.85)
+            label='P(word | Healthy)', color='steelblue', edgecolor='k', alpha=0.8, linewidth=0.8)
 axes[1].bar(x_pos + width/2, word_probs[1], width,
-            label='P(word | Failing)', color='tomato', edgecolor='k', alpha=0.85)
+            label='P(word | Failing)', color='tomato', edgecolor='k', alpha=0.8, linewidth=0.8)
 axes[1].set_xticks(x_pos)
-axes[1].set_xticklabels(word_names, rotation=25, ha='right', fontsize=10)
-axes[1].set_ylabel('P(word | class)')
-axes[1].set_title(f'MultinomialNB — Maintenance Report Word Counts\n'
-                  f'Accuracy: {m_acc:.1%}  |  50 reports\n'
-                  f'"smoke/noise/leak" → Failing  |  "normal/smooth/clean" → Healthy')
-axes[1].legend(fontsize=9)
+axes[1].set_xticklabels(word_names, rotation=30, ha='right', fontsize=8)
+axes[1].set_ylabel('P(word | class)', fontsize=9)
+axes[1].set_title(f'MultinomialNB — Maintenance Report Words\nAccuracy: {m_acc:.1%}  |  50 reports\nBad words → Failing  |  Good words → Healthy', fontsize=9, fontweight='bold')
+axes[1].legend(fontsize=7.5, loc='upper left')
 axes[1].grid(True, alpha=0.2, axis='y')
-axes[1].set_ylim(0, max(word_probs.max(), 0.55) + 0.05)
+axes[1].set_ylim(0, max(word_probs.max(), 0.55) + 0.08)
+axes[1].tick_params(labelsize=8)
 
 # RIGHT: BernoulliNB — check pass probability per class
 x_pos_b = np.arange(len(check_names))
 axes[2].bar(x_pos_b - width/2, check_probs[0], width,
-            label='P(PASS | Healthy)', color='steelblue', edgecolor='k', alpha=0.85)
+            label='P(PASS | Healthy)', color='steelblue', edgecolor='k', alpha=0.8, linewidth=0.8)
 axes[2].bar(x_pos_b + width/2, check_probs[1], width,
-            label='P(PASS | Failing)', color='tomato', edgecolor='k', alpha=0.85)
+            label='P(PASS | Failing)', color='tomato', edgecolor='k', alpha=0.8, linewidth=0.8)
 axes[2].set_xticks(x_pos_b)
-axes[2].set_xticklabels(check_names, rotation=25, ha='right', fontsize=10)
-axes[2].set_ylabel('Probability check passes (=1)')
-axes[2].set_title(f'BernoulliNB — Binary Inspection Checklist\n'
-                  f'Accuracy: {b_acc:.1%}  |  120 inspections\n'
-                  f'Healthy trucks pass most checks  |  Failing trucks fail many')
-axes[2].legend(fontsize=9)
+axes[2].set_xticklabels(check_names, rotation=30, ha='right', fontsize=8)
+axes[2].set_ylabel('Probability check passes', fontsize=9)
+axes[2].set_title(f'BernoulliNB — Binary Inspection Checklist\nAccuracy: {b_acc:.1%}  |  120 inspections\nHealthy pass most  |  Failing fail many', fontsize=9, fontweight='bold')
+axes[2].legend(fontsize=7.5, loc='upper right')
 axes[2].grid(True, alpha=0.2, axis='y')
-axes[2].set_ylim(0, 1.15)
+axes[2].set_ylim(0, 1.2)
+axes[2].tick_params(labelsize=8)
 
 # Add value labels on top of BernoulliNB bars
 for i in range(len(check_names)):
-    axes[2].text(i - width/2, check_probs[0][i] + 0.02, f'{check_probs[0][i]:.2f}',
-                 ha='center', fontsize=7.5, color='steelblue', fontweight='bold')
-    axes[2].text(i + width/2, check_probs[1][i] + 0.02, f'{check_probs[1][i]:.2f}',
-                 ha='center', fontsize=7.5, color='tomato', fontweight='bold')
+    axes[2].text(i - width/2, check_probs[0][i] + 0.03, f'{check_probs[0][i]:.2f}',
+                 ha='center', fontsize=6.5, color='steelblue', fontweight='bold')
+    axes[2].text(i + width/2, check_probs[1][i] + 0.03, f'{check_probs[1][i]:.2f}',
+                 ha='center', fontsize=6.5, color='tomato', fontweight='bold')
 
 plt.suptitle('NAIVE BAYES — 3 Variants: Same Bayes Theorem, Different Data Assumptions',
-             fontsize=14, fontweight='bold')
-plt.tight_layout()
+             fontsize=12, fontweight='bold', y=0.98)
+plt.tight_layout(rect=[0, 0, 1, 0.96])
 plt.show()

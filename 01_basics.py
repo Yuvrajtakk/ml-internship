@@ -494,6 +494,68 @@
 
 
 
+# #python:Support Vector Machine Margin Visualizer:svm_margin_walkthrough.py
+# import numpy as np  # Used to construct coordinate vectors and matrix spacing arrays
+# import matplotlib.pyplot as plt  # Used to render our decision space maps and dot plots
+# from sklearn.svm import SVC  # Used to import the standard support vector binary classification machine
+
+# # 1. Generate an array grid of 8 coordinate positions representing truck parameters [Speed, Vibrations]
+# X = np.array([
+#     [2, 3], [3, 2], [1, 1], [4, 1],  # Healthy delivery trucks (Class 0)
+#     [6, 7], [7, 6], [8, 8], [5, 9]   # Failing delivery trucks (Class 1)
+# ])
+# y = np.array([0, 0, 0, 0, 1, 1, 1, 1])  # Target classifications mapped to each truck vector
+
+# # 2. Instantiate and fit a linear linear-kernel SVM machine
+# # C=1.0 specifies our strictness penalty factor; kernel='linear' locks the algorithm to straight separating hyperplanes
+# svm_model = SVC(kernel='linear', C=1.0)
+# svm_model.fit(X, y)  # Executes convex quadratic programming loops to mathematically isolate support points
+
+# # 3. Establish structural figure layout elements using matplotlib
+# plt.figure(figsize=(10, 7))  # Creates a layout sheet sized 10 inches wide by 7 inches tall
+
+# # 4. Generate coordinate mesh grids to construct our continuous color-filled boundary background
+# x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1  # Border calculations tracking the Speed feature limits
+# y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1  # Border calculations tracking the Vibration feature limits
+# xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02), np.arange(y_min, y_max, 0.02))  # Build coordinate mesh sheets
+
+# # 5. Calculate class predictions for every specific mesh intersection pixel on our visual background sheet
+# Z = svm_model.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)  # Reshape vector sheets back into data matrices
+# plt.contourf(xx, yy, Z, alpha=0.2, cmap='bwr')  # Render our divided filled regional background colors (Blue/Red)
+
+# # 6. Isolate and draw the mathematical decision hyperplane line and its corresponding margin boundaries
+# w = svm_model.coef_[0]  # Extract the isolated weight parameter vector [w0, w1] calculated by the optimizer
+# slope = -w[0] / w[1]  # Derive standard geometric straight-line slope values from structural vector weights
+# intercept = -svm_model.intercept_[0] / w[1]  # Scale coordinate intercept offsets relative to vertical dimension maps
+# axis_range = np.linspace(x_min, x_max, 100)  # Continuous linear value space tracking our horizontal scale range
+# hyperplane_line = slope * axis_range + intercept  # Calculate standard line point positions tracking the main hyperplane
+# plt.plot(axis_range, hyperplane_line, 'k-', linewidth=2, label='Separating Hyperplane')  # Plot solid line center boundary
+
+# # 7. Calculate and overlay parallel margin lanes derived from support vector coordinate spacing constraints
+# margin_offset = 1 / w[1]  # Scale vertical line spacing gaps using extracted weight norm projections
+# margin_above = hyperplane_line + margin_offset  # Shift baseline points vertically to mark upper class bounds
+# margin_below = hyperplane_line - margin_offset  # Shift baseline points vertically to mark lower class bounds
+# plt.plot(axis_range, margin_above, 'k--', linewidth=1.5, label='Margin Boundaries')  # Plot upper dashed pavement track
+# plt.plot(axis_range, margin_below, 'k--', linewidth=1.5)  # Plot lower dashed pavement track
+
+# # 8. Circle specific points saved in internal model state memory arrays identified as Support Vectors
+# support_points = svm_model.support_vectors_  # Extract coordinate values saved inside internal model storage fields
+# plt.scatter(support_points[:, 0], support_points[:, 1], s=250, facecolors='none', edgecolors='black', linewidths=2.5, label='Support Vectors')  # Ring vectors
+
+# # 9. Scatter plot original point distributions grouped by target labels over the shaded territory spaces
+# plt.scatter(X[y == 0, 0], X[y == 0, 1], color='blue', edgecolor='k', s=100, label='Healthy Truck (0)')
+# plt.scatter(X[y == 1, 0], X[y == 1, 1], color='red', edgecolor='k', s=100, label='Failing Truck (1)')
+
+# # 10. Finalize descriptive chart legend titles, labeled axes elements, and screen window layouts
+# plt.title('Support Vector Machine: Maximum Margin Space Separation')  # Write structural map heading titles
+# plt.xlabel('Truck Speed (Normalized Scale)')  # Label horizontal feature orientation vectors
+# plt.ylabel('Vibration Energy (Normalized Scale)')  # Label vertical feature orientation vectors
+# plt.legend(loc='upper left')  # Draw bounded identifying descriptive map keys
+# plt.grid(True, linestyle=':', alpha=0.6)  # Layer lightweight structural coordinate alignment dots
+# plt.show()  # Command standard operating kernels to project finalized map structures onto user screens
+
+
+
 #python:Support Vector Machine Margin Visualizer:svm_margin_walkthrough.py
 import numpy as np  # Used to construct coordinate vectors and matrix spacing arrays
 import matplotlib.pyplot as plt  # Used to render our decision space maps and dot plots
@@ -553,7 +615,5 @@ plt.ylabel('Vibration Energy (Normalized Scale)')  # Label vertical feature orie
 plt.legend(loc='upper left')  # Draw bounded identifying descriptive map keys
 plt.grid(True, linestyle=':', alpha=0.6)  # Layer lightweight structural coordinate alignment dots
 plt.show()  # Command standard operating kernels to project finalized map structures onto user screens
-
-
 
 

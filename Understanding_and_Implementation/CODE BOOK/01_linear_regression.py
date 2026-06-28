@@ -115,7 +115,6 @@ ax2.set_title(f'Test Set: Actual vs Predicted\nR² = {r2:.3f}  |  RMSE = ₹{rms
 ax2.legend()
 ax2.grid(True, alpha=0.3)
 
-plt.suptitle('LINEAR REGRESSION — Watsoo Express Fuel Cost Predictor',
-             fontsize=13, fontweight='bold')
+plt.suptitle('LINEAR REGRESSION — Watsoo Express Fuel Cost Predictor',fontsize=13, fontweight='bold')
 plt.tight_layout()
 plt.show()

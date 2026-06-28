@@ -145,16 +145,14 @@ forest_2d.fit(X_train[:, :2], y_train)
 
 x_min, x_max = X[:, 0].min() - 5, X[:, 0].max() + 5
 y_min, y_max = X[:, 1].min() - 0.05, X[:, 1].max() + 0.05
-xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.5),
-                     np.arange(y_min, y_max, 0.01))
+xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.5),np.arange(y_min, y_max, 0.01))
 Z = forest_2d.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
 ax1.contourf(xx, yy, Z, alpha=0.3, cmap='bwr')
 ax1.scatter(X[y==0, 0], X[y==0, 1], color='blue', edgecolor='black', s=80, alpha=0.8, label='Healthy (0)')
 ax1.scatter(X[y==1, 0], X[y==1, 1], color='red', edgecolor='black', s=80, alpha=0.8, label='Failing (1)')
 ax1.set_xlabel('Speed (km/h)', fontsize=11, fontweight='bold')
 ax1.set_ylabel('Vibration (G-force)', fontsize=11, fontweight='bold')
-ax1.set_title(f'RANDOM FOREST — 100 Trees, Smarter Together Than Any Single Tree\nOOB Accuracy: {forest_2d.oob_score_:.1%}  |  Smooth boundary = committee vote', 
-              fontsize=12, fontweight='bold', pad=15)
+ax1.set_title(f'RANDOM FOREST — 100 Trees, Smarter Together Than Any Single Tree\nOOB Accuracy: {forest_2d.oob_score_:.1%}  |  Smooth boundary = committee vote', fontsize=12, fontweight='bold', pad=15)
 ax1.legend(fontsize=10, loc='upper left')
 ax1.grid(True, alpha=0.2, linestyle='--')
 
@@ -162,10 +160,7 @@ ax1.grid(True, alpha=0.2, linestyle='--')
 for i in range(4):
     position = [2, 3, 5, 6][i]
     ax = fig.add_subplot(2, 3, position)
-    plot_tree(forest.estimators_[i],
-              feature_names=feature_names,
-              class_names=class_names,
-              filled=True, fontsize=6, ax=ax, rounded=True)
+    plot_tree(forest.estimators_[i],feature_names=feature_names,class_names=class_names,filled=True, fontsize=6, ax=ax, rounded=True)
     ax.set_title(f'Tree {i+1} (one of 100)\nNotice: different questions!', fontsize=10, fontweight='bold')
 
 # Feature importance bar chart in position 6 (bottom right)
@@ -184,7 +179,6 @@ ax_imp.tick_params(axis='x', labelsize=9)
 ax_imp.tick_params(axis='y', labelsize=9)
 ax_imp.grid(True, alpha=0.2, axis='y', linestyle='--')
 
-plt.suptitle('RANDOM FOREST — 100 Trees, Smarter Together Than Any Single Tree',
-             fontsize=14, fontweight='bold', y=0.98)
+plt.suptitle('RANDOM FOREST — 100 Trees, Smarter Together Than Any Single Tree',fontsize=14, fontweight='bold', y=0.98)
 plt.tight_layout(rect=[0, 0, 1, 0.96])
 plt.show()

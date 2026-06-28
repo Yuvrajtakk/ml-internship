@@ -30,8 +30,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import (accuracy_score, precision_score,
-                             recall_score, f1_score, confusion_matrix)
+from sklearn.metrics import (accuracy_score, precision_score,recall_score, f1_score, confusion_matrix)
 
 np.random.seed(42)
 
@@ -136,8 +135,7 @@ axes[0].grid(True, alpha=0.3)
 # MIDDLE: Decision boundary in 2D feature space
 x0_min, x0_max = X_scaled[:, 0].min() - 0.5, X_scaled[:, 0].max() + 0.5
 x1_min, x1_max = X_scaled[:, 1].min() - 0.5, X_scaled[:, 1].max() + 0.5
-xx, yy = np.meshgrid(np.arange(x0_min, x0_max, 0.03),
-                     np.arange(x1_min, x1_max, 0.03))
+xx, yy = np.meshgrid(np.arange(x0_min, x0_max, 0.03),np.arange(x1_min, x1_max, 0.03))
 Z = model.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
 axes[1].contourf(xx, yy, Z, alpha=0.25, cmap='bwr')
 axes[1].scatter(X_scaled[y==0, 0], X_scaled[y==0, 1],
@@ -176,7 +174,6 @@ axes[2].legend(fontsize=9)
 axes[2].grid(True, alpha=0.3)
 axes[2].set_ylim(0, 1.05)
 
-plt.suptitle('LOGISTIC REGRESSION — Truck Health Classifier',
-             fontsize=13, fontweight='bold')
+plt.suptitle('LOGISTIC REGRESSION — Truck Health Classifier',fontsize=13, fontweight='bold')
 plt.tight_layout()
 plt.show()

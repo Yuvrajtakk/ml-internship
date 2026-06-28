@@ -8,10 +8,10 @@
 #   "What is the machine actually doing when it learns?"
 #
 # ANSWER: Make a prediction → measure the error → nudge the
-#         weights to reduce that error → repeat until error ≈ 0
+#   weights to reduce that error → repeat until error ≈ 0
 #
-# This exact loop runs inside sklearn's .fit() every time
-# you call it. The algorithms differ in HOW they calculate
+# This exact loop runs inside sklearn's .fit() every time you call it.  
+#  The algorithms differ in HOW they calculate
 # the update — not WHETHER they do this loop.
 # ==============================================================
 

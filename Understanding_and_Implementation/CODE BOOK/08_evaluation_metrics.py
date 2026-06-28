@@ -56,8 +56,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import (accuracy_score, precision_score, recall_score,
-                             f1_score, confusion_matrix, classification_report)
+from sklearn.metrics import (accuracy_score, precision_score, recall_score,f1_score, confusion_matrix, classification_report)
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -202,45 +201,44 @@ print("=" * 65)
 # =============================================================
 # VISUALIZATION
 # =============================================================
-fig, axes = plt.subplots(2, 2, figsize=(15, 11))
-plt.subplots_adjust(hspace=0.38, wspace=0.3)
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+plt.subplots_adjust(hspace=0.40, wspace=0.32)
 
 # TOP-LEFT: Confusion Matrix heatmap for manual example (10 trucks)
 cm_manual = confusion_matrix(y_actual, y_predicted)
 axes[0, 0].imshow(cm_manual, cmap='Blues')
 cell_labels = [['TN', 'FP'], ['FN', 'TP']]
-cell_colors = [['Correctly\nignored', 'False alarm\n(costly in some cases)'],
-               ['Missed failure\n(dangerous!)', 'Correctly\ncaught']]
+cell_colors = [['Correct', 'False alarm'],
+               ['Missed', 'Correct']]
 for i in range(2):
     for j in range(2):
         val   = cm_manual[i, j]
-        label = f"{val}\n({cell_labels[i][j]})"
+        label = f"{val}\n{cell_labels[i][j]}"
         color = 'white' if val >= 2 else 'black'
         axes[0, 0].text(j, i, label, ha='center', va='center',
-                        fontsize=12, fontweight='bold', color=color)
+                        fontsize=10, fontweight='bold', color=color)
 axes[0, 0].set_xticks([0, 1])
 axes[0, 0].set_yticks([0, 1])
-axes[0, 0].set_xticklabels(['Predicted: Healthy', 'Predicted: Failing'], fontsize=9)
-axes[0, 0].set_yticklabels(['Actual: Healthy', 'Actual: Failing'], fontsize=9)
-axes[0, 0].set_title('Confusion Matrix (10-truck example)\nDarker = more trucks in that cell')
+axes[0, 0].set_xticklabels(['Predicted: Healthy', 'Predicted: Failing'], fontsize=8)
+axes[0, 0].set_yticklabels(['Actual: Healthy', 'Actual: Failing'], fontsize=8)
+axes[0, 0].set_title('Confusion Matrix (10 trucks)\nTP|FP|FN|TN breakdown', fontsize=9, fontweight='bold')
 
 # TOP-RIGHT: 4 metrics bar chart for the real model
 metrics_names  = ['Accuracy', 'Precision', 'Recall', 'F1 Score']
 metrics_values = [acc_r, prec_r, rec_r, f1_r]
 bar_colors     = ['#4C72B0', '#DD8452', '#55A868', '#C44E52']
 
-bars = axes[0, 1].bar(metrics_names, metrics_values, color=bar_colors, edgecolor='k', width=0.5)
+bars = axes[0, 1].bar(metrics_names, metrics_values, color=bar_colors, edgecolor='k', width=0.55, linewidth=0.8)
 for bar, val in zip(bars, metrics_values):
     axes[0, 1].text(bar.get_x() + bar.get_width()/2,
-                    bar.get_height() + 0.02, f'{val:.2f}',
-                    ha='center', va='bottom', fontsize=12, fontweight='bold')
-axes[0, 1].set_ylim(0, 1.15)
-axes[0, 1].axhline(1.0, color='gray', linestyle='--', alpha=0.4, label='Perfect score')
-axes[0, 1].set_ylabel('Score')
-axes[0, 1].set_title(f'Real Model: All 4 Metrics (default threshold=0.5)\n'
-                     f'{len(X_test)} test trucks, Logistic Regression')
-axes[0, 1].legend(fontsize=9)
+                    bar.get_height() + 0.025, f'{val:.2f}',
+                    ha='center', va='bottom', fontsize=9, fontweight='bold')
+axes[0, 1].set_ylim(0, 1.2)
+axes[0, 1].axhline(1.0, color='gray', linestyle='--', alpha=0.3, linewidth=1)
+axes[0, 1].set_ylabel('Score', fontsize=8)
+axes[0, 1].set_title(f'All 4 Metrics (threshold=0.5)\n{len(X_test)} test trucks, Logistic Regression', fontsize=9, fontweight='bold')
 axes[0, 1].grid(True, alpha=0.2, axis='y')
+axes[0, 1].tick_params(labelsize=7.5)
 
 # BOTTOM-LEFT: Precision-Recall trade-off curve across thresholds
 thresholds = np.arange(0.05, 0.98, 0.04)
@@ -251,39 +249,37 @@ for t in thresholds:
     recs_t.append(recall_score(y_test, preds_t, zero_division=0))
     f1s_t.append(f1_score(y_test, preds_t, zero_division=0))
 
-axes[1, 0].plot(thresholds, precs_t, color='darkorange', linewidth=2.5, label='Precision')
-axes[1, 0].plot(thresholds, recs_t,  color='steelblue',  linewidth=2.5, label='Recall')
-axes[1, 0].plot(thresholds, f1s_t,   color='green', linewidth=2, linestyle='-.', label='F1 Score')
-axes[1, 0].axvline(0.5, color='gray', linestyle='--', linewidth=1.5, alpha=0.7, label='Default (0.5)')
-axes[1, 0].axvline(0.3, color='purple', linestyle=':', linewidth=1.5, alpha=0.7, label='Paranoid (0.3)')
-axes[1, 0].set_xlabel('Decision Threshold')
-axes[1, 0].set_ylabel('Score')
-axes[1, 0].set_title('Precision / Recall / F1 Across Thresholds\n'
-                     'Raising threshold: Precision ↑, Recall ↓\n'
-                     'Lowering threshold: Recall ↑, Precision ↓')
-axes[1, 0].legend(fontsize=8)
+axes[1, 0].plot(thresholds, precs_t, color='darkorange', linewidth=2, label='Precision', marker='o', markersize=3)
+axes[1, 0].plot(thresholds, recs_t,  color='steelblue',  linewidth=2, label='Recall', marker='s', markersize=3)
+axes[1, 0].plot(thresholds, f1s_t,   color='green', linewidth=1.8, linestyle='-.', label='F1 Score')
+axes[1, 0].axvline(0.5, color='gray', linestyle='--', linewidth=1.2, alpha=0.6, label='Default (0.5)')
+axes[1, 0].axvline(0.3, color='purple', linestyle=':', linewidth=1.2, alpha=0.6, label='Paranoid (0.3)')
+axes[1, 0].set_xlabel('Decision Threshold', fontsize=8)
+axes[1, 0].set_ylabel('Score', fontsize=8)
+axes[1, 0].set_title('Precision-Recall Trade-off\nLower threshold → catch more (Recall↑, Precision↓)', fontsize=8.5, fontweight='bold')
+axes[1, 0].legend(fontsize=7)
 axes[1, 0].grid(True, alpha=0.25)
-axes[1, 0].set_ylim(0, 1.05)
+axes[1, 0].set_ylim(-0.05, 1.1)
+axes[1, 0].tick_params(labelsize=7)
 
 # BOTTOM-RIGHT: The Accuracy Trap — visual comparison
 trap_metrics = ['Accuracy', 'Recall', 'Precision', 'F1 Score']
 lazy_values  = [lazy_acc, lazy_rec, lazy_prec, lazy_f1]
 trap_colors  = ['#4C72B0', '#C44E52', '#55A868', '#DD8452']
 
-bars_trap = axes[1, 1].bar(trap_metrics, lazy_values, color=trap_colors, edgecolor='k', width=0.5)
+bars_trap = axes[1, 1].bar(trap_metrics, lazy_values, color=trap_colors, edgecolor='k', width=0.55, linewidth=0.8)
 for bar, val in zip(bars_trap, lazy_values):
     axes[1, 1].text(bar.get_x() + bar.get_width()/2,
-                    bar.get_height() + 0.015, f'{val:.0%}',
-                    ha='center', va='bottom', fontsize=12, fontweight='bold')
-axes[1, 1].set_ylim(0, 1.15)
-axes[1, 1].set_ylabel('Score')
-axes[1, 1].set_title('THE ACCURACY TRAP ⚠\n'
-                     '"Always predict Healthy" on 90/10 imbalanced data\n'
-                     'Accuracy=90% but Recall=0% — caught ZERO failing trucks!')
-axes[1, 1].axhline(1.0, color='gray', linestyle='--', alpha=0.3)
+                    bar.get_height() + 0.025, f'{val:.0%}',
+                    ha='center', va='bottom', fontsize=9, fontweight='bold')
+axes[1, 1].set_ylim(0, 1.2)
+axes[1, 1].set_ylabel('Score', fontsize=8)
+axes[1, 1].set_title('THE ACCURACY TRAP ⚠\n"Always predict Healthy" on imbalanced data\nAccuracy=90% but Recall=0% — dangerous!', fontsize=8.5, fontweight='bold')
+axes[1, 1].axhline(1.0, color='gray', linestyle='--', alpha=0.3, linewidth=1)
 axes[1, 1].grid(True, alpha=0.2, axis='y')
+axes[1, 1].tick_params(labelsize=7.5)
 
 plt.suptitle('EVALUATION METRICS — Accuracy, Precision, Recall, F1',
-             fontsize=14, fontweight='bold')
-plt.tight_layout()
+             fontsize=12, fontweight='bold', y=0.98)
+plt.tight_layout(rect=[0, 0, 1, 0.96])
 plt.show()

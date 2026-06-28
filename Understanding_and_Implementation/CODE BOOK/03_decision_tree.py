@@ -133,8 +133,7 @@ fig, axes = plt.subplots(1, 3, figsize=(20, 6))
 # LEFT: Decision boundary for the 2D tree (Temp vs Vibration)
 x_min, x_max = X_2d[:, 0].min() - 5, X_2d[:, 0].max() + 5
 y_min, y_max = X_2d[:, 1].min() - 0.05, X_2d[:, 1].max() + 0.05
-xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.3),
-                     np.arange(y_min, y_max, 0.005))
+xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.3),np.arange(y_min, y_max, 0.005))
 Z = tree_2d.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
 axes[0].contourf(xx, yy, Z, alpha=0.25, cmap='bwr')
 axes[0].scatter(X_2d[y==0, 0], X_2d[y==0, 1],
@@ -147,12 +146,7 @@ axes[0].set_title(f'Decision Boundary (Depth=3)\nAxis-aligned rectangular region
 axes[0].legend(fontsize=8)
 
 # MIDDLE: Tree flowchart — the actual rules
-plot_tree(tree_good,
-          feature_names=feature_names,
-          class_names=class_names,
-          filled=True,
-          fontsize=7,
-          ax=axes[1])
+plot_tree(tree_good,feature_names=feature_names,class_names=class_names,filled=True,fontsize=7,ax=axes[1])
 axes[1].set_title('Decision Tree Flowchart (Depth=3)\nBlue = Healthy tendency | Red = Failing tendency')
 
 # RIGHT: Overfitting comparison — accuracy bars
@@ -165,11 +159,9 @@ w     = 0.3
 b1 = axes[2].bar(x_pos - w/2, train_accs, w, color='steelblue', edgecolor='k', label='Train accuracy')
 b2 = axes[2].bar(x_pos + w/2, test_accs,  w, color='tomato',    edgecolor='k', label='Test accuracy')
 for bar in b1:
-    axes[2].text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.005,
-                 f'{bar.get_height():.1%}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+    axes[2].text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.005,f'{bar.get_height():.1%}', ha='center', va='bottom', fontsize=9, fontweight='bold')
 for bar in b2:
-    axes[2].text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.005,
-                 f'{bar.get_height():.1%}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+    axes[2].text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.005,f'{bar.get_height():.1%}', ha='center', va='bottom', fontsize=9, fontweight='bold')
 axes[2].set_ylim(0.5, 1.08)
 axes[2].set_xticks(x_pos)
 axes[2].set_xticklabels(labels)
@@ -178,7 +170,6 @@ axes[2].set_title('Overfitting Demo\nTrain vs Test accuracy gap')
 axes[2].legend()
 axes[2].grid(True, alpha=0.3, axis='y')
 
-plt.suptitle('DECISION TREE — Truck Health Classifier (100 Trucks, 3 Features)',
-             fontsize=13, fontweight='bold')
+plt.suptitle('DECISION TREE — Truck Health Classifier (100 Trucks, 3 Features)',fontsize=13, fontweight='bold')
 plt.tight_layout()
 plt.show()

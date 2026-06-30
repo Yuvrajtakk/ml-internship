@@ -7,8 +7,7 @@
 
 ## Project overview
 
-This repository is my complete documented learning journey for a 2-month AI/ML internship.
-It was built as a single-threaded path from first principles to practical model evaluation:
+This repository documents my learning journey through the foundational phase of my 2-month AI/ML internship. It follows a single-threaded path from first principles to practical model evaluation:
 - start with the meaning of a weight, error, learning rate, SGD, and bias
 - build each algorithm in a dedicated file
 - use visuals to make the results easy to understand
